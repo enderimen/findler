@@ -60,52 +60,102 @@ const io = new Server(server, {
   maxHttpBufferSize: 1e6
 });
 
-/* ---------------- Skor tablosu (lokalde JSON dosyasında tutulur) ---------------- */
+/* ---------------- Skor tablosu ---------------- */
+// SUPABASE_URL ve SUPABASE_SECRET_KEY tanımlıysa (yayında) skorlar Supabase'de tutulur;
+// tanımlı değilse (lokal geliştirme) server/data/leaderboard.json dosyası kullanılır.
+// Tablo ve fonksiyon tanımı: supabase/schema.sql
+
+const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/+$/, '');
+const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
+const useSupabase = Boolean(SUPABASE_URL && SUPABASE_SECRET_KEY);
+
+const nameKey = (name) => name.toLocaleLowerCase('tr');
+
+// Gizli anahtar sadece sunucuda kullanılır; tarayıcıya asla gönderilmez
+const supabaseHeaders = () => ({
+  apikey: SUPABASE_SECRET_KEY,
+  // Eski tip (JWT) service_role anahtarı Authorization başlığında da beklenir
+  ...(SUPABASE_SECRET_KEY?.startsWith('eyJ') && { Authorization: `Bearer ${SUPABASE_SECRET_KEY}` }),
+  'Content-Type': 'application/json'
+});
+
+const supabaseLeaderboard = {
+  async record(players, winnerId) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/record_game`, {
+      method: 'POST',
+      headers: supabaseHeaders(),
+      body: JSON.stringify({
+        players: players.map((p) => ({ key: nameKey(p.name), name: p.name })),
+        winner_key: nameKey(players.find((p) => p.id === winnerId).name)
+      })
+    });
+    if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
+  },
+  async top(limit) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/leaderboard?select=name,wins,games,last_win_at&order=wins.desc,games.asc&limit=${limit}`,
+      { headers: supabaseHeaders() }
+    );
+    if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
+    const rows = await res.json();
+    return rows.map(({ last_win_at, ...row }) => ({ ...row, ...(last_win_at && { lastWinAt: last_win_at }) }));
+  }
+};
 
 const DATA_DIR = path.join(__dirname, 'data');
 const LEADERBOARD_FILE = path.join(DATA_DIR, 'leaderboard.json');
 
-const loadLeaderboard = () => {
+const fileLeaderboard = (() => {
+  let entries = {};
   try {
-    return JSON.parse(fs.readFileSync(LEADERBOARD_FILE, 'utf8'));
+    entries = JSON.parse(fs.readFileSync(LEADERBOARD_FILE, 'utf8'));
   } catch {
-    return {};
+    entries = {};
   }
-};
 
-const leaderboard = loadLeaderboard();
-
-const saveLeaderboard = () => {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFile(LEADERBOARD_FILE, JSON.stringify(leaderboard, null, 2), (err) => {
-    if (err) console.error('Skor tablosu kaydedilemedi:', err);
-  });
-};
-
-const recordGame = (players, winnerId) => {
-  for (const player of players) {
-    const key = player.name.toLocaleLowerCase('tr');
-    const entry = leaderboard[key] || { name: player.name, wins: 0, games: 0 };
-    entry.name = player.name;
-    entry.games += 1;
-    if (player.id === winnerId) {
-      entry.wins += 1;
-      entry.lastWinAt = new Date().toISOString();
+  return {
+    async record(players, winnerId) {
+      for (const player of players) {
+        const key = nameKey(player.name);
+        const entry = entries[key] || { name: player.name, wins: 0, games: 0 };
+        entry.name = player.name;
+        entry.games += 1;
+        if (player.id === winnerId) {
+          entry.wins += 1;
+          entry.lastWinAt = new Date().toISOString();
+        }
+        entries[key] = entry;
+      }
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+      await fs.promises.writeFile(LEADERBOARD_FILE, JSON.stringify(entries, null, 2));
+    },
+    async top(limit) {
+      return Object.values(entries)
+        .sort((a, b) => b.wins - a.wins || a.games - b.games)
+        .slice(0, limit);
     }
-    leaderboard[key] = entry;
-  }
-  saveLeaderboard();
+  };
+})();
+
+const leaderboard = useSupabase ? supabaseLeaderboard : fileLeaderboard;
+console.log(`Skor tablosu: ${useSupabase ? 'Supabase' : 'yerel dosya'}`);
+
+// Oyun akışını bekletmez; kayıt başarısız olursa sadece loglanır
+const recordGame = (players, winnerId) => {
+  leaderboard.record(players, winnerId).catch((err) => console.error('Skor kaydedilemedi:', err.message));
 };
 
 // Uyandırma ve sağlık kontrolü: arayüz açılır açılmaz çağırır ki ücretsiz sunucu
 // (uykudaysa) oyuncu butona basana kadar uyanmış olsun
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
-app.get('/api/leaderboard', (_req, res) => {
-  const rows = Object.values(leaderboard)
-    .sort((a, b) => b.wins - a.wins || a.games - b.games)
-    .slice(0, 50);
-  res.json({ data: rows });
+app.get('/api/leaderboard', async (_req, res) => {
+  try {
+    res.json({ data: await leaderboard.top(50) });
+  } catch (err) {
+    console.error('Skor tablosu okunamadı:', err.message);
+    res.status(503).json({ data: [], error: 'Skor tablosu şu an okunamıyor.' });
+  }
 });
 
 /* ---------------- Oda yönetimi ---------------- */
