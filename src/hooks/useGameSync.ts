@@ -3,7 +3,7 @@ import { socket, gameApi } from '@/services/socket/game';
 import { useAppDispatch } from '@/store/hooks';
 import { joined, left, pushNotice, setConnected, setRoom } from '@/store/slices/game';
 import { Notice, RoomState } from '@/types/game';
-import { getProfile, getSeat, handleApiError, playSound, saveSeat } from '@/utils/helpers';
+import { getProfile, getSeat, handleApiError, playSound, saveLastScores, saveSeat } from '@/utils/helpers';
 import joinSound from '@/assets/sounds/join.mp3';
 
 // Socket olaylarını store'a bağlar. Uygulamada bir kez (MainLayout'ta) çalışır.
@@ -39,7 +39,17 @@ export const useGameSync = () => {
 
     const onState = (state: RoomState) => {
       // Odadan çıktıktan sonra gelebilecek gecikmiş yayınları yok say
-      if (getSeat()?.roomId === state.roomId) dispatch(setRoom(state));
+      if (getSeat()?.roomId !== state.roomId) return;
+      dispatch(setRoom(state));
+      // Skor Tablosu odadan çıktıktan sonra da son odanın skorlarını gösterebilsin
+      if (state.players.some((p) => p.games > 0)) {
+        saveLastScores({
+          roomId: state.roomId,
+          solo: state.solo,
+          meId: getSeat()?.playerId ?? null,
+          players: state.players.map(({ id, name, avatar, wins, games }) => ({ id, name, avatar, wins, games })),
+        });
+      }
     };
 
     const onNotice = (notice: Pick<Notice, 'message' | 'type'>) => {

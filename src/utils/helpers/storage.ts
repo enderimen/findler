@@ -1,7 +1,8 @@
-import { Profile } from '@/types/game';
+import { Profile, RoomScores } from '@/types/game';
 
 const PROFILE_KEY = 'fm:profile';
 const SEAT_KEY = 'fm:seat';
+const SCORES_KEY = 'fm:scores';
 
 export interface Seat {
   roomId: string;
@@ -42,3 +43,8 @@ try {
 // ve sayfa yenilenince oyuncu kaldığı yerden devam eder.
 export const getSeat = () => read<Seat>(sessionStorage, SEAT_KEY);
 export const saveSeat = (seat: Seat | null) => write(sessionStorage, SEAT_KEY, seat);
+
+// Son oynanan odanın skorları; odadan çıktıktan sonra da Skor Tablosu'nda görünür,
+// sekme ya da tarayıcı kapanınca silinir.
+export const getLastScores = () => read<RoomScores>(sessionStorage, SCORES_KEY);
+export const saveLastScores = (scores: RoomScores) => write(sessionStorage, SCORES_KEY, scores);

@@ -16,7 +16,9 @@ export interface Player {
   name: string;
   avatar: string | null;
   connected: boolean;
+  // Bu odada kazandığı / oynadığı oyun sayısı (sadece oda açık kaldıkça tutulur)
   wins: number;
+  games: number;
   mistakes: number;
   // Bu oyunda açtığı kart sayısı
   moves: number;
@@ -69,9 +71,11 @@ export interface Profile {
   avatar: string | null;
 }
 
-export interface LeaderboardEntry {
-  name: string;
-  wins: number;
-  games: number;
-  lastWinAt?: string;
+// Skor Tablosu sayfası için son oynanan odanın skorları
+export interface RoomScores {
+  roomId: string;
+  solo: boolean;
+  // Bu tarayıcıdaki oyuncu ("Sen" işareti için)
+  meId: string | null;
+  players: Pick<Player, 'id' | 'name' | 'avatar' | 'wins' | 'games'>[];
 }

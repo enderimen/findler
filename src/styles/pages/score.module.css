@@ -52,3 +52,41 @@
   font-bold
   text-gold
 }
+
+.subtitle {
+  @apply
+  -mt-3
+  mb-5
+  text-sm
+  opacity-80
+}
+
+.empty {
+  @apply
+  flex
+  flex-col
+  items-start
+  gap-4
+}
+
+.player {
+  @apply
+  flex
+  items-center
+  gap-2
+}
+
+.me {
+  @apply
+  rounded-full
+  bg-gold
+  px-2
+  text-[10px]
+  font-bold
+  text-light-black
+}
+
+.back {
+  @apply
+  mt-6
+}

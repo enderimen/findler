@@ -16,7 +16,7 @@ npm run dev      # Arayüz → http://localhost:5173
 Aynı tarayıcıda iki sekme açarak çok oyunculu test yapılabilir; her sekme ayrı oyuncu sayılır.
 
 - Sunucu adresi `VITE_SERVER_URL` ile, sunucu portu `PORT` ile, izin verilen origin `CLIENT_ORIGIN` ile değiştirilebilir.
-- Skor tablosu lokalde `server/data/leaderboard.json` dosyasında tutulur.
+- Kalıcı veri yok: skorlar oda bazında sunucunun hafızasında, kullanıcı adı/avatar tarayıcıda (sekme kapanınca silinir) tutulur.
 - Oyun durumu sunucuda tutulur; kapalı kartların değerleri istemciye gönderilmez.
 
 ---

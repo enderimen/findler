@@ -1,8 +1,6 @@
 // server/index.js
 const express = require('express');
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
@@ -60,53 +58,13 @@ const io = new Server(server, {
   maxHttpBufferSize: 1e6
 });
 
-/* ---------------- Skor tablosu (lokalde JSON dosyasında tutulur) ---------------- */
-
-const DATA_DIR = path.join(__dirname, 'data');
-const LEADERBOARD_FILE = path.join(DATA_DIR, 'leaderboard.json');
-
-const loadLeaderboard = () => {
-  try {
-    return JSON.parse(fs.readFileSync(LEADERBOARD_FILE, 'utf8'));
-  } catch {
-    return {};
-  }
-};
-
-const leaderboard = loadLeaderboard();
-
-const saveLeaderboard = () => {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFile(LEADERBOARD_FILE, JSON.stringify(leaderboard, null, 2), (err) => {
-    if (err) console.error('Skor tablosu kaydedilemedi:', err);
-  });
-};
-
-const recordGame = (players, winnerId) => {
-  for (const player of players) {
-    const key = player.name.toLocaleLowerCase('tr');
-    const entry = leaderboard[key] || { name: player.name, wins: 0, games: 0 };
-    entry.name = player.name;
-    entry.games += 1;
-    if (player.id === winnerId) {
-      entry.wins += 1;
-      entry.lastWinAt = new Date().toISOString();
-    }
-    leaderboard[key] = entry;
-  }
-  saveLeaderboard();
-};
+/* ---------------- Skorlar ----------------
+   Skorlar oda bazında, sadece sunucunun hafızasında tutulur (oyuncu başına galibiyet ve
+   oyun sayısı). Kalıcı bir skor tablosu yok; ileride bir veritabanına taşınabilir. */
 
 // Uyandırma ve sağlık kontrolü: arayüz açılır açılmaz çağırır ki ücretsiz sunucu
 // (uykudaysa) oyuncu butona basana kadar uyanmış olsun
 app.get('/health', (_req, res) => res.json({ ok: true }));
-
-app.get('/api/leaderboard', (_req, res) => {
-  const rows = Object.values(leaderboard)
-    .sort((a, b) => b.wins - a.wins || a.games - b.games)
-    .slice(0, 50);
-  res.json({ data: rows });
-});
 
 /* ---------------- Oda yönetimi ---------------- */
 
@@ -171,12 +129,13 @@ const toPublic = (room) => ({
   gameId: room.gameId,
   dealId: room.dealId,
   turnSeq: room.turnSeq,
-  players: room.players.map(({ id, name, avatar, connected, wins, mistakes, moves }) => ({
+  players: room.players.map(({ id, name, avatar, connected, wins, games, mistakes, moves }) => ({
     id,
     name,
     avatar,
     connected,
     wins,
+    games,
     mistakes,
     moves
   })),
@@ -313,8 +272,8 @@ const finishGame = (room) => {
   room.locked = false;
   const winner = findPlayer(room, room.finishers[0]?.id);
   if (winner) winner.wins += 1;
-  // Tek kişilik oyunlar genel skor tablosunu etkilemez
-  if (!room.solo && winner) recordGame(room.players, winner.id);
+  // Bu oyunda odada bulunan herkes için oynanan oyun sayısı
+  room.players.forEach((p) => (p.games += 1));
 };
 
 // Oyuncu tüm kartları doğru sırayla açtığında
@@ -437,6 +396,7 @@ io.on('connection', (socket) => {
       socketId: socket.id,
       connected: true,
       wins: 0,
+      games: 0,
       mistakes: 0,
       moves: 0
     };
