@@ -38,3 +38,12 @@
   flex-col
   self-auto
 }
+
+.waking {
+  @apply
+  min-h-[1.5rem]
+  text-center
+  text-sm
+  text-gold
+  animate-pulse
+}

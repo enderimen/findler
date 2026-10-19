@@ -32,10 +32,12 @@ export const useRoom = () => {
   const joinRoom = async (roomId: string, profile: Profile) =>
     enter(profile, await gameApi.joinRoom({ roomId, ...profile }));
 
+  // Sunucunun cevabı beklenmez: bağlantı yoksa (ör. sunucu uyanıyorsa) çıkış takılmasın.
+  // Bağlantısı kopan oyuncuyu sunucu zaten kısa süre sonra odadan çıkarır.
   const leaveRoom = async () => {
     saveSeat(null);
     dispatch(left());
-    await gameApi.leaveRoom().catch(() => {});
+    gameApi.leaveRoom().catch(() => {});
   };
 
   return { room, playerId, me, isHost, rejoining, connected, createRoom, quickPlay, joinRoom, leaveRoom };

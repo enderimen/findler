@@ -97,6 +97,10 @@ const recordGame = (players, winnerId) => {
   saveLeaderboard();
 };
 
+// Uyandırma ve sağlık kontrolü: arayüz açılır açılmaz çağırır ki ücretsiz sunucu
+// (uykudaysa) oyuncu butona basana kadar uyanmış olsun
+app.get('/health', (_req, res) => res.json({ ok: true }));
+
 app.get('/api/leaderboard', (_req, res) => {
   const rows = Object.values(leaderboard)
     .sort((a, b) => b.wins - a.wins || a.games - b.games)

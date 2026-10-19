@@ -5,6 +5,7 @@ import Input from "@/components/Input";
 import { Profile } from "@/types/game";
 import { Error as ErrorMessage } from "@/utils/constants";
 import { getProfile, handleApiError } from "@/utils/helpers";
+import { useAppSelector } from "@/store/hooks";
 import styles from "./style.module.css";
 
 interface ProfileAction {
@@ -29,6 +30,7 @@ function ProfileForm({ actions, variant = "inline" }: ProfileFormProps) {
   const [avatar, setAvatar] = useState<string | null>(() => getProfile()?.avatar ?? null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const connected = useAppSelector((state) => state.game.connected);
 
   const submit = async (action: ProfileAction) => {
     const trimmed = name.trim();
@@ -77,7 +79,12 @@ function ProfileForm({ actions, variant = "inline" }: ProfileFormProps) {
           />
         ))}
       </div>
-      <p className={styles.error} role="alert">{error || " "}</p>
+      {busy && !connected ? (
+        // Ücretsiz sunucu uykudaysa ilk istek bir dakika kadar sürebilir
+        <p className={styles.waking} role="status">Sunucu uyanıyor, bu bir dakika kadar sürebilir…</p>
+      ) : (
+        <p className={styles.error} role="alert">{error || " "}</p>
+      )}
     </form>
   );
 }
