@@ -1,0 +1,55 @@
+.stack {
+  @apply
+  pointer-events-none
+  fixed
+  left-1/2
+  top-5
+  z-[60]
+  flex
+  -translate-x-1/2
+  flex-col
+  items-center
+  gap-2
+}
+
+.toast {
+  @apply
+  rounded-full
+  bg-gradient-to-r
+  from-green-700
+  to-green-500
+  max-w-[calc(100vw-2rem)]
+  px-6
+  py-3
+  text-center
+  text-sm
+  md:px-9
+  font-bold
+  text-white
+  shadow-lg;
+  animation: toast-in 0.25s ease-out;
+}
+
+.error {
+  @apply
+  from-red-800
+  to-red-600
+}
+
+/* Oyundan ayrılma ve bağlantı kopması */
+.leave {
+  @apply
+  from-red-700
+  to-rose-500
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

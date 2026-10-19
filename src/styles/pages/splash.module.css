@@ -1,0 +1,14 @@
+.splash {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.splash::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  /* Kart yelpazesi artık CardFan bileşeninde animasyonlu çiziliyor */
+  background: url('./../../assets/images/table.png') no-repeat bottom center / min(1000px, 100vw);
+  z-index: -1;
+}

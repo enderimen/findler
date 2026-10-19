@@ -1,0 +1,93 @@
+.card {
+  @apply
+  flex
+  w-full
+  max-w-[380px]
+  flex-col
+  items-center
+  gap-3
+  rounded-2xl
+  border-2
+  border-gold
+  border-opacity-60
+  bg-[radial-gradient(at_top,_var(--bg-color),_var(--bg-color-dark))]
+  px-7
+  pb-4
+  pt-7
+  text-center
+  shadow-2xl
+}
+
+.players {
+  @apply
+  flex
+  items-center
+  justify-center
+  pl-2
+}
+
+/* Avatarlar hafifçe üst üste biner */
+.playerAvatar,
+.emptySeat {
+  @apply
+  -ml-2
+}
+
+.emptySeat {
+  @apply
+  h-11
+  w-11
+  rounded-full
+  border-2
+  border-dashed
+  border-gold
+  border-opacity-40
+}
+
+.title {
+  @apply
+  mt-1
+  text-2xl
+  font-bold
+  text-gold
+}
+
+.subtitle {
+  @apply
+  text-sm
+  text-white
+  opacity-90
+}
+
+.subtitle strong {
+  @apply
+  text-gold
+}
+
+.divider {
+  @apply
+  my-1
+  w-full
+  border-gold
+  border-opacity-20
+}
+
+.muted {
+  @apply
+  py-6
+  text-gold
+  opacity-80
+}
+
+.unavailable {
+  @apply
+  flex
+  w-full
+  flex-col
+  gap-3
+  pb-3
+  pt-2
+  text-sm
+  font-bold
+  text-red-300
+}

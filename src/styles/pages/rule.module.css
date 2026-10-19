@@ -1,0 +1,43 @@
+.rule {
+  @apply
+  m-auto
+  flex
+  flex-col
+  h-full
+  w-full
+  max-w-[750px]
+  text-gold
+  p-5
+  md:p-10
+}
+.ruleList {
+  @apply
+  flex
+  flex-col
+}
+.ruleSubList {
+  @apply
+  flex
+  flex-col
+  gap-2
+  list-disc
+  pl-6
+}
+.ruleSubListContent {
+  @apply
+  flex
+  flex-col
+  mb-2
+}
+.ruleSubTitle {
+  @apply
+  font-bold
+  mb-2
+}
+.ruleTitle {
+  @apply
+  text-2xl
+  text-left
+  font-bold
+  mb-6
+}

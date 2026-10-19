@@ -1,0 +1,88 @@
+.flipCard {
+  background-color: transparent;
+  /* Boyutlar Board tarafından ekrana göre CSS değişkenleriyle verilir */
+  height: var(--card-h, 200px);
+  width: var(--card-w, 150px);
+  perspective: 1000px;
+  cursor: default;
+  padding: 0;
+  border: none;
+}
+
+.flipCard.playable {
+  cursor: pointer;
+}
+
+.flipCard.playable:hover .flipCardInner {
+  transform: translateY(-4px);
+}
+
+.flipCardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.flipCard.flip .flipCardInner {
+  transform: rotateY(180deg);
+}
+
+.flipCardFront,
+.flipCardBack,
+.flipCardLeft,
+.flipCardRight {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.flipCardFront {
+  /* Seviyeye özel desen + logo Board tarafından --card-back ile verilir */
+  background: var(--card-back, url(./../../assets/images/card-back.jpg) center / cover no-repeat);
+  color: black;
+  transform: translateZ(10px);
+  border: var(--card-border, 4px) solid #fff;
+}
+
+.flipCardBack {
+  background-color: #f8aa14;
+  font-size: var(--card-font, 86px);
+  font-weight: bold;
+  line-height: 1;
+  color: white;
+  transform: rotateY(180deg) translateZ(10px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: var(--card-border, 4px) solid #fff;
+  transition: background-color 0.2s;
+}
+
+.flipCardBack.wrong {
+  background-color: #c0392b;
+}
+
+.flipCardLeft, .flipCardRight {
+  width: 20px;
+  height: 100%;
+  background-color: var(--card-edge, #f8aa14);
+  box-shadow: none;
+  position: absolute;
+  top: 0;
+}
+
+.flipCardLeft {
+  left: -10px;
+  transform: rotateY(-90deg) translateZ(0px);
+}
+
+.flipCardRight {
+  right: -10px;
+  transform: rotateY(90deg) translateZ(0px);
+}

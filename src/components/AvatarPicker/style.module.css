@@ -1,0 +1,29 @@
+.picker {
+  @apply
+  relative
+  mx-auto
+}
+
+.change {
+  @apply
+  absolute
+  right-0
+  top-1
+  flex
+  h-6
+  w-6
+  items-center
+  justify-center
+  rounded-full
+  border
+  border-white
+  bg-light-black
+  p-1
+  text-white
+}
+
+.change svg {
+  @apply
+  h-full
+  w-full
+}

@@ -1,0 +1,155 @@
+.popupOverlay {
+  @apply
+  fixed
+  inset-0
+  z-50
+  flex
+  items-end
+  justify-center
+  bg-black
+  bg-opacity-60
+  backdrop-blur-sm
+  sm:items-center
+  sm:px-4
+}
+
+/* Mobilde alttan açılan panel (bottom sheet), geniş ekranda ortada kart */
+.popupContent {
+  @apply
+  relative
+  flex
+  w-full
+  flex-col
+  items-center
+  gap-4
+  rounded-t-3xl
+  border-2
+  border-b-0
+  border-white
+  bg-[radial-gradient(at_center,_var(--bg-color),_var(--bg-color-dark))]
+  px-6
+  pt-10
+  text-center
+  sm:max-w-[410px]
+  sm:rounded-2xl
+  sm:border-b-2
+  sm:px-8
+  sm:pb-6
+  sm:pt-12;
+  /* iPhone'da alttaki çubuğun altında kalmasın */
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+
+.handle {
+  @apply
+  absolute
+  left-1/2
+  top-3
+  h-1
+  w-10
+  -translate-x-1/2
+  rounded-full
+  bg-white
+  bg-opacity-40
+  sm:hidden;
+}
+
+.popupTitle {
+  @apply
+  text-white
+}
+
+.close {
+  @apply
+  absolute
+  right-4
+  top-3
+  text-lg
+  text-white
+}
+
+.link {
+  @apply
+  flex
+  w-full
+  items-center
+  gap-2
+  rounded-lg
+  bg-white
+  px-4
+  py-2
+  text-sm
+  text-light-black
+}
+
+.link span {
+  @apply
+  flex-1
+  cursor-pointer
+  truncate
+}
+
+.link button {
+  @apply
+  h-5
+  w-5
+  shrink-0
+  text-green-600
+}
+
+.linkCopied {
+  @apply
+  ring-2
+  ring-green-500
+}
+
+.shareRow {
+  @apply
+  flex
+  w-full
+  gap-3
+}
+
+.shareBtn {
+  @apply
+  flex
+  flex-1
+  items-center
+  justify-center
+  gap-2
+  rounded-full
+  py-2.5
+  text-sm
+  font-bold
+  transition-opacity
+  hover:opacity-90;
+}
+
+.shareBtn svg {
+  @apply
+  h-5
+  w-5;
+}
+
+.native {
+  @apply
+  bg-gold
+  text-light-black;
+}
+
+.whatsapp {
+  @apply
+  bg-[#25D366]
+  text-white;
+}
+
+.copied {
+  @apply
+  text-sm
+  text-gold
+}
+
+.copiedSlot {
+  @apply
+  min-h-[1.25rem]
+}

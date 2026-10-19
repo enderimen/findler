@@ -1,0 +1,40 @@
+.form {
+  @apply
+  flex
+  flex-col
+  items-center
+  gap-4
+  -translate-y-[100px]
+}
+
+.buttons {
+  @apply
+  flex
+  flex-wrap
+  justify-center
+  gap-2
+  md:gap-3
+  md:self-end
+}
+
+.error {
+  @apply
+  min-h-[1.5rem]
+  text-sm
+  font-bold
+  text-red-400
+}
+
+.stacked {
+  @apply
+  w-full
+  translate-y-0
+  gap-3
+}
+
+.stacked .buttons {
+  @apply
+  w-full
+  flex-col
+  self-auto
+}

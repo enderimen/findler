@@ -1,0 +1,74 @@
+.board {
+  @apply
+  flex
+  h-full
+  w-full
+  flex-col
+  items-center
+  gap-4
+}
+
+.status {
+  @apply
+  flex
+  min-h-[2rem]
+  shrink-0
+  flex-wrap
+  items-center
+  justify-center
+  gap-3
+  text-center
+  text-lg
+  font-bold
+  text-gold
+}
+
+.myTurn {
+  @apply
+  text-white
+}
+
+.timer {
+  @apply
+  rounded-full
+  bg-black
+  bg-opacity-40
+  px-3
+  py-0.5
+  text-sm
+  tabular-nums
+  text-gold
+}
+
+.urgent {
+  @apply
+  text-red-400
+}
+
+/* Kartların sığdırıldığı alan; ölçüsü Board içinde hesaplanır.
+   Geniş ekranda sağdaki oyuncu listesine yer bırakıp kartları ortada tutar. */
+.area {
+  @apply
+  flex
+  min-h-0
+  w-full
+  flex-1
+  items-center
+  justify-center
+  overflow-hidden
+  lg:px-[280px]
+}
+
+/* Genişlik, kart boyutu ve boşluk Board içinde inline verilir; son sıra ortalanır */
+.cards {
+  @apply
+  flex
+  flex-wrap
+  justify-center
+}
+
+/* Kart bir button (satır içi öğe); altında yazı boşluğu kalıp satırlar uzamasın */
+.slot {
+  @apply
+  flex
+}

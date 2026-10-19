@@ -1,0 +1,163 @@
+/* Telefonda sadece yuvarlak avatarlardan oluşan yatay şerit,
+   geniş ekranda (lg) isimli dikey liste */
+.list {
+  @apply
+  flex
+  w-full
+  gap-[3px]
+  overflow-x-auto
+  px-2
+  pb-1
+  pt-3
+  lg:flex-col
+  lg:gap-3
+  lg:overflow-visible
+  lg:p-0
+}
+
+.item {
+  @apply
+  relative
+  flex
+  shrink-0
+  items-center
+  rounded-full
+  p-[3px]
+  transition-opacity
+  lg:gap-3
+  lg:rounded-r-none
+  lg:bg-gradient-to-r
+  lg:from-white/10
+  lg:to-transparent
+  lg:py-1
+  lg:pl-1
+  lg:pr-4;
+}
+
+/* Geniş ekranda sırası gelenin sağında yeşil çizgi */
+.item::after {
+  content: "";
+  @apply
+  absolute
+  bottom-0
+  right-0
+  top-0
+  hidden
+  w-3
+  bg-transparent
+  transition-colors
+  lg:block;
+}
+
+/* Telefonda sırası gelenin avatarı yeşil halkayla çevrilir */
+.active {
+  @apply
+  bg-green-500
+  lg:bg-transparent;
+}
+
+.active::after {
+  @apply
+  bg-green-500;
+}
+
+.finished > span:first-child {
+  @apply
+  opacity-50
+  grayscale;
+}
+
+.finished .name {
+  @apply
+  opacity-60;
+}
+
+.rank {
+  @apply
+  absolute
+  left-[32px]
+  top-[30px]
+  flex
+  h-5
+  w-5
+  items-center
+  justify-center
+  rounded-full
+  border
+  border-white
+  bg-gold
+  text-[11px]
+  font-bold
+  text-light-black
+  lg:left-[36px]
+  lg:top-[32px];
+}
+
+.moves {
+  @apply
+  absolute
+  bottom-0
+  left-0
+  min-w-[18px]
+  rounded-full
+  bg-black
+  bg-opacity-70
+  px-1
+  text-center
+  text-[10px]
+  leading-[16px]
+  text-gold
+  lg:hidden;
+}
+
+.offline {
+  @apply
+  opacity-50;
+}
+
+.info {
+  @apply
+  hidden
+  min-w-0
+  flex-col
+  lg:flex
+}
+
+.name {
+  @apply
+  truncate
+  text-lg
+  font-bold
+  text-white;
+}
+
+.meta {
+  @apply
+  truncate
+  text-xs
+  text-gold;
+}
+
+.transfer {
+  @apply
+  ml-auto
+  mr-3
+  hidden
+  shrink-0
+  rounded-full
+  border
+  border-gold
+  px-2
+  py-0.5
+  text-[11px]
+  text-gold
+  opacity-0
+  transition-opacity
+  focus:opacity-100
+  lg:block;
+}
+
+.item:hover .transfer {
+  @apply
+  opacity-100;
+}

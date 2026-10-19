@@ -1,0 +1,41 @@
+.fan {
+  position: absolute;
+  top: 2vh;
+  left: 50%;
+  width: 360px;
+  height: 330px;
+  transform: translateX(-50%);
+  transform-origin: top center;
+}
+
+/* Telefonda yelpaze küçülür: kenarlardan taşmasın ve alttaki yazıyla çakışmasın */
+@media (max-width: 640px) {
+  .fan {
+    top: 3vh;
+    transform: translateX(-50%) scale(0.56);
+  }
+}
+
+.card {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  width: 150px;
+  height: 210px;
+  margin-left: -75px;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  /* Kartlar alttaki ortak bir noktadan açılır */
+  transform-origin: 50% 140%;
+}
+
+.front {
+  bottom: 0;
+  width: 128px;
+  height: 180px;
+  margin-left: -64px;
+  transform-origin: 50% 50%;
+}

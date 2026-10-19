@@ -1,0 +1,177 @@
+.resultContent {
+  @apply
+  flex
+  flex-col
+  items-center
+  justify-center
+  w-full
+  h-full
+  overflow-y-auto
+  py-6;
+  /* İçerik ekrana sığmazsa (ör. kurucu ayar panelini açınca) üstü kesilmesin, kaydırılabilsin */
+  justify-content: safe center;
+}
+
+/* Öğeler sığmak için büzülmesin; sığmıyorsa sayfa kayar */
+.resultContent > * {
+  flex-shrink: 0;
+}
+
+.resultTitle {
+  @apply
+  text-4xl
+  md:text-6xl
+  font-bold
+  text-gold
+  text-center
+  mb-6;
+}
+
+.leader {
+  @apply
+  relative;
+}
+
+.leaderName {
+  @apply
+  absolute
+  bottom-[65px]
+  left-1/2
+  text-lg
+  font-bold
+  text-white
+  -translate-x-1/2
+}
+
+.confettiWrapper {
+  @apply
+  -z-1
+}
+.actions {
+  @apply
+  mt-6
+  flex
+  min-h-[40px]
+  w-full
+  flex-col
+  items-center
+  gap-3
+  px-4
+}
+
+.buttons {
+  @apply
+  flex
+  flex-wrap
+  justify-center
+  gap-3
+}
+
+.waiting {
+  @apply
+  max-w-[360px]
+  text-center
+  text-sm
+  text-gold
+}
+
+.stats {
+  @apply
+  mt-4
+  text-lg
+  font-bold
+  text-gold
+}
+
+.ranking {
+  @apply
+  mt-4
+  flex
+  w-full
+  max-w-[340px]
+  flex-col
+  gap-2
+}
+
+.rankItem {
+  @apply
+  flex
+  items-center
+  gap-3
+  rounded-full
+  bg-black
+  bg-opacity-30
+  py-1
+  pl-2
+  pr-4
+  font-bold
+  text-white
+}
+
+.rankMe {
+  @apply
+  ring-2
+  ring-gold
+}
+
+.rankNo {
+  @apply
+  w-6
+  text-right
+  text-gold
+}
+
+.rankName {
+  @apply
+  min-w-0
+  flex-1
+  truncate
+}
+
+/* Hamle ve hata sayısı: küçük ve soluk */
+.rankStats {
+  @apply
+  shrink-0
+  text-xs
+  font-normal
+  text-gold
+  opacity-80
+}
+
+.nextGame {
+  @apply
+  mt-5
+  flex
+  flex-wrap
+  items-center
+  justify-center
+  gap-2
+  px-4
+}
+
+.nextLabel {
+  @apply
+  text-xs
+  text-gold
+  opacity-70
+}
+
+.editToggle {
+  @apply
+  text-xs
+  font-bold
+  text-gold
+  underline
+  underline-offset-2
+}
+
+/* Kurucunun sonuç ekranında açtığı ayar paneli */
+.editPanel {
+  @apply
+  mt-3
+  flex
+  w-full
+  justify-center
+  overflow-hidden
+  px-4
+}

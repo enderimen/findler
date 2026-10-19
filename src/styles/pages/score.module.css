@@ -1,0 +1,54 @@
+.score {
+  @apply
+  m-auto
+  flex
+  w-full
+  max-w-[750px]
+  flex-col
+  p-5
+  md:p-10
+  text-gold
+}
+
+.title {
+  @apply
+  mb-6
+  text-2xl
+  font-bold
+}
+
+.tableWrapper {
+  @apply
+  overflow-x-auto
+}
+
+.scoreTable {
+  @apply
+  w-full
+  text-left
+}
+
+.scoreTable th {
+  @apply
+  border-b
+  border-gold
+  px-3
+  py-2
+  font-bold
+}
+
+.scoreTable td {
+  @apply
+  border-b
+  border-white
+  border-opacity-10
+  px-3
+  py-2
+  text-white
+}
+
+.scoreTable tbody tr:first-child td {
+  @apply
+  font-bold
+  text-gold
+}

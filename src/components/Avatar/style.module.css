@@ -1,0 +1,40 @@
+.wrapper {
+  @apply
+  relative
+  inline-flex
+  shrink-0
+}
+
+.avatar {
+  @apply
+  flex
+  h-full
+  w-full
+  items-center
+  justify-center
+  overflow-hidden
+  rounded-full
+  border-2
+  border-white
+  bg-dark-green
+  font-bold
+  text-gold
+  select-none
+}
+
+.avatar img {
+  @apply
+  h-full
+  w-full
+  object-cover
+}
+
+.crown {
+  @apply
+  pointer-events-none
+  absolute
+  -left-2
+  -top-2
+  leading-none
+  drop-shadow-md
+}

@@ -1,0 +1,25 @@
+.toggle {
+  @apply
+  flex
+  h-10
+  w-10
+  shrink-0
+  items-center
+  justify-center
+  rounded-full
+  text-gold
+  transition-colors
+  hover:bg-white
+  hover:bg-opacity-10;
+}
+
+.toggle svg {
+  @apply
+  h-6
+  w-6;
+}
+
+.toggle[aria-pressed="true"] {
+  @apply
+  opacity-60;
+}

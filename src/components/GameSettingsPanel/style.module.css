@@ -1,0 +1,110 @@
+.panel {
+  @apply
+  flex
+  w-full
+  max-w-[540px]
+  flex-col
+  gap-4
+  rounded-2xl
+  border
+  border-gold
+  border-opacity-40
+  bg-black
+  bg-opacity-30
+  p-4
+  text-left
+  md:p-5
+  backdrop-blur-sm
+}
+
+.row {
+  @apply
+  grid
+  grid-cols-1
+  md:grid-cols-[110px_1fr]
+  items-center
+  gap-x-4
+  gap-y-1
+}
+
+.label {
+  @apply
+  text-sm
+  font-bold
+  text-gold
+}
+
+.options {
+  @apply
+  flex
+  flex-wrap
+  gap-1.5
+}
+
+/* Seviye satırındaki 7 seçenek dar telefonlarda da tek satıra sığsın */
+.chip {
+  @apply
+  min-w-[32px]
+  rounded-full
+  border
+  border-gold
+  border-opacity-50
+  px-[6.6px]
+  py-1
+  text-[12.7px]
+  text-gold
+  transition-colors
+  enabled:hover:bg-gold
+  enabled:hover:bg-opacity-20
+  disabled:cursor-default;
+}
+
+.selected {
+  @apply
+  border-opacity-100
+  bg-gold
+  font-bold
+  text-light-black
+  enabled:hover:bg-gold
+  enabled:hover:bg-opacity-100;
+}
+
+.hint {
+  @apply
+  md:col-start-2
+  text-xs
+  text-gold
+  opacity-70;
+}
+
+/* Kurucu olmayanlar ayarları görür ama değiştiremez */
+.readonly .options {
+  @apply
+  opacity-60;
+}
+
+.readonly .chip:not(.selected) {
+  @apply
+  border-dashed;
+}
+
+.lockNote {
+  @apply
+  flex
+  items-center
+  justify-center
+  gap-2
+  border-b
+  border-gold
+  border-opacity-20
+  pb-3
+  text-sm
+  text-gold;
+}
+
+.lockNote svg {
+  @apply
+  h-4
+  w-4
+  shrink-0;
+}

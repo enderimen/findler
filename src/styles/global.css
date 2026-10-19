@@ -1,0 +1,37 @@
+/* Masa rengi; seviyeye göre değişir (useLevelBackground). @property ile tanımlandığı için
+   renk değişimi yumuşak bir geçişle olur. */
+@property --bg-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2D6607;
+}
+
+:root {
+  --bg-color: #2D6607;
+  /* Paneller için masa renginin koyu tonu */
+  --bg-color-dark: color-mix(in srgb, var(--bg-color) 22%, #000);
+}
+
+body {
+  @apply
+  font-raleway;
+  background-color: #010101;
+  /* Ortadan kenarlara kararan masa rengi */
+  background-image: radial-gradient(at center, var(--bg-color), #010101);
+  background-attachment: fixed;
+  transition: --bg-color 0.8s ease;
+}
+
+.app-layout {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  height: 100vh;
+  /* Mobil tarayıcılarda adres çubuğu hesaba katılsın */
+  height: 100dvh;
+}
+
+main {
+  flex: 1;
+  overflow-y: auto;
+}
