@@ -26,9 +26,17 @@ const write = (storage: Storage, key: string, value: unknown) => {
   }
 };
 
-// Kullanıcı adı ve avatar tüm sekmelerde hatırlanır
-export const getProfile = () => read<Profile>(localStorage, PROFILE_KEY);
-export const saveProfile = (profile: Profile) => write(localStorage, PROFILE_KEY, profile);
+// Kullanıcı adı ve avatar sadece tarayıcıda tutulur (sunucuya/veritabanına kaydedilmez);
+// sekme ya da tarayıcı kapanınca silinir.
+export const getProfile = () => read<Profile>(sessionStorage, PROFILE_KEY);
+export const saveProfile = (profile: Profile) => write(sessionStorage, PROFILE_KEY, profile);
+
+// Eski sürümler profili localStorage'da kalıcı tutuyordu; kalıntısını temizle
+try {
+  localStorage.removeItem(PROFILE_KEY);
+} catch {
+  // Depolama kapalıysa yapılacak bir şey yok
+}
 
 // Odadaki koltuk sekmeye özeldir; böylece aynı tarayıcıda iki sekmeyle test edilebilir
 // ve sayfa yenilenince oyuncu kaldığı yerden devam eder.

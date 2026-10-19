@@ -81,7 +81,7 @@ function ProfileForm({ actions, variant = "inline" }: ProfileFormProps) {
       </div>
       {busy && !connected ? (
         // Ücretsiz sunucu uykudaysa ilk istek bir dakika kadar sürebilir
-        <p className={styles.waking} role="status">Sunucu uyanıyor, bu bir dakika kadar sürebilir…</p>
+        <p className={styles.waking} role="status">Sunucu ayarları hazırlanıyor, bu bir dakika kadar sürebilir…</p>
       ) : (
         <p className={styles.error} role="alert">{error || " "}</p>
       )}

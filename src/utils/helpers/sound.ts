@@ -4,9 +4,16 @@ const cache = new Map<string, HTMLAudioElement>();
 const MUTED_KEY = 'fm:muted';
 const listeners = new Set<() => void>();
 
+// Eski sürümlerin localStorage'da bıraktığı tercihi temizle
+try {
+  localStorage.removeItem(MUTED_KEY);
+} catch {
+  // Depolama kapalıysa yapılacak bir şey yok
+}
+
 const readMuted = () => {
   try {
-    return localStorage.getItem(MUTED_KEY) === '1';
+    return sessionStorage.getItem(MUTED_KEY) === '1';
   } catch {
     return false;
   }
@@ -16,11 +23,11 @@ let muted = readMuted();
 
 export const isMuted = () => muted;
 
-// Kullanıcının ses tercihi; tarayıcıda hatırlanır
+// Kullanıcının ses tercihi; sekme/tarayıcı kapanana kadar hatırlanır
 export const setMuted = (value: boolean) => {
   muted = value;
   try {
-    localStorage.setItem(MUTED_KEY, value ? '1' : '0');
+    sessionStorage.setItem(MUTED_KEY, value ? '1' : '0');
   } catch {
     // Depolama kapalıysa tercih sadece bu oturumda geçerli olur
   }
