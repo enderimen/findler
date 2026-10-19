@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 73 72">
+  <!-- base-logo.svg'deki sembol; açık ve koyu sekme çubuklarında görünsün diye yeşil zemin üzerinde -->
+  <rect width="73" height="72" rx="16" fill="#2D6607" />
+  <path d="M23.5 11H55V51.5H25.5V43H46.5V34.5H25.5V26H46.5V18H18V60.5H46.5" fill="none" stroke="#ddb474" stroke-width="6" />
+</svg>
