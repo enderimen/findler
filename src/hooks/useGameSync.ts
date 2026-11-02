@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { socket, gameApi } from '@/services/socket/game';
 import { useAppDispatch } from '@/store/hooks';
-import { joined, left, pushNotice, setConnected, setRoom } from '@/store/slices/game';
-import { Notice, RoomState } from '@/types/game';
+import { joined, left, pushNotice, setConnected, setOnline, setRoom } from '@/store/slices/game';
+import { Notice, OnlinePlayer, RoomState } from '@/types/game';
 import { getProfile, getSeat, handleApiError, playSound, saveLastScores, saveSeat } from '@/utils/helpers';
 import joinSound from '@/assets/sounds/join.mp3';
 
@@ -33,8 +33,12 @@ export const useGameSync = () => {
 
     const onConnect = () => {
       dispatch(setConnected(true));
+      // Tarayıcıda adı kayıtlıysa çevrimiçi listesinde görünsün
+      const profile = getProfile();
+      if (profile) gameApi.sayHello(profile).catch(() => {});
       rejoin();
     };
+    const onPresence = (list: OnlinePlayer[]) => dispatch(setOnline(list));
     const onDisconnect = () => dispatch(setConnected(false));
 
     const onState = (state: RoomState) => {
@@ -61,6 +65,7 @@ export const useGameSync = () => {
     socket.on('disconnect', onDisconnect);
     socket.on('room:state', onState);
     socket.on('room:notice', onNotice);
+    socket.on('presence:list', onPresence);
 
     if (socket.connected) onConnect();
 
@@ -69,6 +74,7 @@ export const useGameSync = () => {
       socket.off('disconnect', onDisconnect);
       socket.off('room:state', onState);
       socket.off('room:notice', onNotice);
+      socket.off('presence:list', onPresence);
     };
   }, [dispatch]);
 };

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Notice, NoticeType, RoomState } from "@/types/game";
+import { Notice, NoticeType, OnlinePlayer, RoomState } from "@/types/game";
 import { JoinResponse } from "@/types/api";
 import { getSeat } from "@/utils/helpers";
 
@@ -11,6 +11,8 @@ interface GameSliceState {
   connected: boolean;
   inviteOpen: boolean;
   notices: Notice[];
+  // Sitede adını girmiş çevrimiçi oyuncular
+  online: OnlinePlayer[];
 }
 
 const initialState: GameSliceState = {
@@ -20,6 +22,7 @@ const initialState: GameSliceState = {
   connected: false,
   inviteOpen: false,
   notices: [],
+  online: [],
 };
 
 let noticeId = 0;
@@ -41,6 +44,9 @@ const gameSlice = createSlice({
     },
     setRoom: (state, action: PayloadAction<RoomState>) => {
       state.room = action.payload;
+    },
+    setOnline: (state, action: PayloadAction<OnlinePlayer[]>) => {
+      state.online = action.payload;
     },
     setConnected: (state, action: PayloadAction<boolean>) => {
       state.connected = action.payload;
@@ -73,6 +79,7 @@ export const {
   left,
   setRoom,
   setConnected,
+  setOnline,
   setRejoining,
   openInvite,
   closeInvite,

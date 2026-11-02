@@ -1,0 +1,114 @@
+.online {
+  @apply
+  flex
+  w-full
+  max-w-[420px]
+  flex-col
+  gap-2
+  rounded-2xl
+  border
+  border-gold
+  border-opacity-30
+  bg-black
+  bg-opacity-30
+  p-3
+  text-left;
+}
+
+.title {
+  @apply
+  flex
+  items-center
+  gap-2
+  text-sm
+  font-bold
+  text-gold;
+}
+
+.dot {
+  @apply
+  h-2
+  w-2
+  rounded-full
+  bg-green-500;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+}
+
+.count {
+  @apply
+  rounded-full
+  bg-gold
+  px-2
+  text-[11px]
+  text-light-black;
+}
+
+.list {
+  @apply
+  flex
+  max-h-[180px]
+  flex-col
+  gap-1
+  overflow-y-auto;
+}
+
+.item {
+  @apply
+  flex
+  items-center
+  gap-2
+  rounded-xl
+  px-1.5
+  py-1
+  hover:bg-white
+  hover:bg-opacity-5;
+}
+
+.name {
+  @apply
+  min-w-0
+  flex-1
+  truncate
+  text-sm
+  font-bold
+  text-white;
+}
+
+.status {
+  @apply
+  shrink-0
+  text-[11px]
+  text-gold
+  opacity-70;
+}
+
+.idle {
+  @apply
+  text-green-400
+  opacity-100;
+}
+
+.invite {
+  @apply
+  shrink-0
+  rounded-full
+  bg-gold
+  px-3
+  py-1
+  text-xs
+  font-bold
+  text-light-black
+  transition-opacity
+  hover:opacity-90
+  disabled:bg-transparent
+  disabled:text-gold
+  disabled:opacity-70;
+}
+
+.empty,
+.hint {
+  @apply
+  text-xs
+  text-gold
+  opacity-80;
+}

@@ -163,7 +163,46 @@ const toPublic = (room) => ({
   maxPlayers: maxPlayers(room)
 });
 
-const broadcast = (room) => io.to(room.id).emit('room:state', toPublic(room));
+/* ---------------- Çevrimiçi oyuncular ---------------- */
+
+// Adını girmiş bağlı oyuncular (socket.id -> { name, avatar }). Adı bilinmeyenler listede görünmez.
+const presence = new Map();
+let lastPresenceJson = '[]';
+let presenceTimer = null;
+const INVITE_COOLDOWN_MS = 15000; // Aynı kişiye tekrar davet için bekleme
+
+const presenceStatus = (s) => {
+  const room = rooms.get(s.data.roomId);
+  if (!room) return 'idle';
+  return room.status === 'playing' ? 'playing' : 'in-room';
+};
+
+const presenceList = () => {
+  const list = [];
+  for (const [id, info] of presence) {
+    const s = io.sockets.sockets.get(id);
+    if (s) list.push({ id, name: info.name, avatar: info.avatar, status: presenceStatus(s) });
+  }
+  return list;
+};
+
+// Liste değişince herkese gönderilir. Oyun sırasında her hamle de tetiklediği için
+// değişiklikler kısa süre toplanır ve liste aynıysa hiç gönderilmez.
+const schedulePresence = () => {
+  if (presenceTimer) return;
+  presenceTimer = setTimeout(() => {
+    presenceTimer = null;
+    const json = JSON.stringify(presenceList());
+    if (json === lastPresenceJson) return;
+    lastPresenceJson = json;
+    io.emit('presence:list', JSON.parse(json));
+  }, 300);
+};
+
+const broadcast = (room) => {
+  io.to(room.id).emit('room:state', toPublic(room));
+  schedulePresence();
+};
 
 const notify = (room, message, type = 'info') => io.to(room.id).emit('room:notice', { message, type });
 
@@ -395,7 +434,57 @@ io.on('connection', (socket) => {
     }
     socket.data.roomId = null;
     socket.data.playerId = null;
+    schedulePresence();
   };
+
+  // Yeni bağlanan herkes güncel çevrimiçi listesini hemen alır
+  socket.emit('presence:list', JSON.parse(lastPresenceJson));
+
+  // Tarayıcıda adı kayıtlı oyuncu bağlanınca kendini çevrimiçi listesine ekletir
+  socket.on('presence:hello', ({ name, avatar } = {}, ack) => {
+    const validName = validateName(name);
+    if (!validName) return fail(ack, 'Geçersiz ad.');
+    presence.set(socket.id, { name: validName, avatar: validateAvatar(avatar) });
+    reply(ack, { ok: true });
+    schedulePresence();
+  });
+
+  // Odadaki bir oyuncu, müsait (odada olmayan) bir çevrimiçi oyuncuyu odasına davet eder
+  socket.on('presence:invite', ({ targetId } = {}, ack) => {
+    const room = currentRoom();
+    if (!room || room.solo) return fail(ack, 'Davet için önce bir oda kurmalısın.');
+    if (room.status !== 'lobby') return fail(ack, 'Oyun başladıktan sonra davet gönderilemez.');
+    if (room.players.length >= MAX_PLAYERS) return fail(ack, 'Oda dolu.');
+    const target = io.sockets.sockets.get(targetId);
+    const info = presence.get(targetId);
+    if (!target || !info || targetId === socket.id) return fail(ack, 'Oyuncu artık çevrimiçi değil.');
+    if (target.data.roomId) return fail(ack, `${info.name} şu an başka bir odada.`);
+
+    socket.data.invites = socket.data.invites || new Map();
+    const last = socket.data.invites.get(targetId) || 0;
+    if (Date.now() - last < INVITE_COOLDOWN_MS) return fail(ack, `${info.name} oyuncusunu az önce davet ettin.`);
+    socket.data.invites.set(targetId, Date.now());
+
+    const me = findPlayer(room, socket.data.playerId);
+    target.emit('invite:incoming', {
+      fromId: socket.id,
+      fromName: me.name,
+      fromAvatar: me.avatar,
+      roomId: room.id,
+      settings: room.settings,
+      playerCount: room.players.length,
+      maxPlayers: maxPlayers(room)
+    });
+    reply(ack, { ok: true });
+  });
+
+  // Davet edilen reddederse davet edene haber verilir
+  socket.on('invite:decline', ({ fromId } = {}) => {
+    const info = presence.get(socket.id);
+    if (info && io.sockets.sockets.has(fromId)) {
+      io.to(fromId).emit('room:notice', { message: `${info.name} daveti reddetti`, type: 'leave' });
+    }
+  });
 
   const addPlayer = (room, name, avatar, ack) => {
     const player = {
@@ -411,6 +500,7 @@ io.on('connection', (socket) => {
     };
     room.players.push(player);
     if (!room.hostId) room.hostId = player.id;
+    presence.set(socket.id, { name, avatar });
 
     socket.join(room.id);
     socket.data.roomId = room.id;
@@ -492,6 +582,7 @@ io.on('connection', (socket) => {
       existing.socketId = socket.id;
       const wasDisconnected = !existing.connected;
       existing.connected = true;
+      presence.set(socket.id, { name: existing.name, avatar: existing.avatar });
 
       socket.join(room.id);
       socket.data.roomId = room.id;
@@ -655,6 +746,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
+    presence.delete(socket.id);
+    schedulePresence();
     const room = currentRoom();
     const player = room && findPlayer(room, socket.data.playerId);
     console.log('User disconnected:', socket.id);

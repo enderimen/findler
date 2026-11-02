@@ -33,6 +33,10 @@ Konuşulan ve ileride eklenecek özellikler. Sıralama önerilen öncelik sıras
 - [ ] **Telefonda kurucu devri** — avatara dokununca menü (şu an "Kurucu Yap" sadece masaüstünde).
 - [ ] **PWA** — "Ana Ekrana Ekle" ile uygulama gibi açılma (manifest + service worker).
 
+- [x] **Oyun içi tepkiler** — ❤️ 👏 🧠 🎉 🔥 😮 ve hazır mesajlar; ekranın alt ortasından yükselip kaybolur.
+- [x] **Sonucu paylaşma** — kazanan için 1080x1080 sonuç görseli + rekabetçi davet metni (telefonun paylaşım menüsü / X, Facebook, WhatsApp).
+- [x] **Çevrimiçi oyuncular ve davet** — adını giren herkes listede görünür (Müsait / Odada / Oyunda); lobideki oyuncu müsait olanları davet eder, karşı taraf Katıl / Reddet.
+
 ## 2. Oyuncu gelmeye başlayınca (hesap + veritabanı gerekir)
 
 - [ ] **Hesaplar** — misafir olarak hemen oyna, istersen Google/Apple ile kalıcı hesaba bağla (Supabase Auth).

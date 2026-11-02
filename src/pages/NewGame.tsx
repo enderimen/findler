@@ -1,5 +1,6 @@
 import styles from "@/styles/pages/new-game.module.css";
 import ProfileForm from "@/components/ProfileForm";
+import OnlinePlayers from "@/components/OnlinePlayers";
 import Watermark from "@/components/Watermark";
 import { useNavigate } from 'react-router-dom';
 import { useRoom } from '@/hooks/useRoom';
@@ -41,6 +42,9 @@ const NewGame = () => {
           { label: 'Hemen Oyna', run: play },
         ]}
       />
+      <div className={styles.online}>
+        <OnlinePlayers canInvite={false} hint="Davet etmek için önce bir oda kur." />
+      </div>
     </div>
   );
 }

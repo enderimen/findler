@@ -8,6 +8,7 @@ import PlayerList from '@/components/PlayerList';
 import InviteJoin from '@/components/InviteJoin';
 import Watermark from '@/components/Watermark';
 import ReactionLayer from '@/components/ReactionLayer';
+import OnlinePlayers from '@/components/OnlinePlayers';
 import GameResult from '@/pages/GameResult';
 import { useRoom } from '@/hooks/useRoom';
 import { useLeaveRoom } from '@/hooks/useLeaveRoom';
@@ -90,6 +91,8 @@ function Lobby({ room, isHost }: { room: RoomState; isHost: boolean }) {
           Oyunu 👑 {room.players.find((p) => p.id === room.hostId)?.name ?? 'oda kurucusu'} başlatacak.
         </p>
       )}
+      {/* Çevrimiçi müsait oyuncular bu odaya davet edilebilir */}
+      {!room.solo && <OnlinePlayers canInvite />}
       {leaveDialog}
     </motion.div>
   );

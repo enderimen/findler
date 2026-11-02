@@ -87,3 +87,25 @@ export interface Reaction {
   name: string;
   kind: string;
 }
+
+// Sitede adını girmiş, bağlı oyuncu
+export type PresenceStatus = 'idle' | 'in-room' | 'playing';
+
+export interface OnlinePlayer {
+  // Sunucudaki bağlantı kimliği (socket id)
+  id: string;
+  name: string;
+  avatar: string | null;
+  status: PresenceStatus;
+}
+
+// Başka bir oyuncudan gelen oyun daveti
+export interface IncomingInvite {
+  fromId: string;
+  fromName: string;
+  fromAvatar: string | null;
+  roomId: string;
+  settings: GameSettings;
+  playerCount: number;
+  maxPlayers: number;
+}

@@ -56,5 +56,9 @@ export const gameApi = {
   restartGame: () => request('game:restart'),
   requestRematch: () => request('game:rematch'),
   sendReaction: (kind: string) => request('room:reaction', { kind }),
+  // Çevrimiçi listesine katıl (tarayıcıda adı kayıtlıysa)
+  sayHello: (profile: Profile) => request('presence:hello', profile),
+  invitePlayer: (targetId: string) => request('presence:invite', { targetId }),
+  declineInvite: (fromId: string) => socket.emit('invite:decline', { fromId }),
   flipCard: (index: number) => request<{ value: number }>('card:flip', { index })
 };

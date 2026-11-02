@@ -15,3 +15,11 @@
   background: url('./../../assets/images/tableless.png') no-repeat bottom center / min(1000px, 100vw);
   z-index: -1;
 }
+
+/* Çevrimiçi oyuncular formun altında; form yukarı kaydırıldığı için aynı oranda yukarı alınır */
+.online {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: -60px;
+}
