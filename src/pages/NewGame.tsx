@@ -2,11 +2,11 @@ import styles from "@/styles/pages/new-game.module.css";
 import ProfileForm from "@/components/ProfileForm";
 import OnlinePlayers from "@/components/OnlinePlayers";
 import Watermark from "@/components/Watermark";
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gameApi } from '@/services/socket/game';
 import { Error as ErrorMessage } from '@/utils/constants';
-import { getProfile } from '@/utils/helpers';
+import { getProfile, saveProfile } from '@/utils/helpers';
 import { useRoom } from '@/hooks/useRoom';
 import { useAppDispatch } from '@/store/hooks';
 import { openInvite } from '@/store/slices/game';
@@ -18,9 +18,20 @@ const NewGame = () => {
   const { createRoom, quickPlay } = useRoom();
   // Formdaki güncel ad/avatar; listeden doğrudan davet ederken kullanılır
   const profileRef = useRef<Profile>(getProfile() ?? { name: '', avatar: null });
+  const helloTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const onProfileChange = useCallback((profile: Profile) => {
     profileRef.current = profile;
+    // Geçerli bir ad yazılınca (yazmayı bırakınca) oyuncu çevrimiçi listesinde görünür;
+    // oda kurmayı beklemeye gerek yok. Ad sekme kapanınca silinir.
+    clearTimeout(helloTimer.current);
+    if (profile.name.length < 2 || profile.name.length > 16) return;
+    helloTimer.current = setTimeout(() => {
+      saveProfile(profile);
+      gameApi.sayHello(profile).catch(() => {});
+    }, 700);
   }, []);
+
+  useEffect(() => () => clearTimeout(helloTimer.current), []);
 
   // Listeden doğrudan davet: arka planda özel bir oda kurulur, davet gönderilir ve
   // oyuncu ayarları yapabileceği lobiye geçer (ör. 1'e 1 meydan okuma)
