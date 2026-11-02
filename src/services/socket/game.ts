@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 import { AckResponse, JoinResponse, RoomPreview } from '@/types/api';
-import { GameSettings, Profile } from '@/types/game';
+import { GameSettings, OnlinePlayer, Profile } from '@/types/game';
 import { Error as ErrorMessage } from '@/utils/constants';
 
 // Varsayılan olarak sayfanın açıldığı makinedeki 3001 portuna bağlanır;
@@ -58,6 +58,7 @@ export const gameApi = {
   sendReaction: (kind: string) => request('room:reaction', { kind }),
   // Çevrimiçi listesine katıl (tarayıcıda adı kayıtlıysa)
   sayHello: (profile: Profile) => request('presence:hello', profile),
+  getOnline: () => request<{ list: OnlinePlayer[] }>('presence:get'),
   invitePlayer: (targetId: string) => request('presence:invite', { targetId }),
   declineInvite: (fromId: string) => socket.emit('invite:decline', { fromId }),
   flipCard: (index: number) => request<{ value: number }>('card:flip', { index })

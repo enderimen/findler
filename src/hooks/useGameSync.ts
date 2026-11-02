@@ -36,6 +36,8 @@ export const useGameSync = () => {
       // Tarayıcıda adı kayıtlıysa çevrimiçi listesinde görünsün
       const profile = getProfile();
       if (profile) gameApi.sayHello(profile).catch(() => {});
+      // Dinleyici kurulduktan sonra güncel listeyi iste; sonraki değişiklikler presence:list ile gelir
+      gameApi.getOnline().then((res) => dispatch(setOnline(res.list)), () => {});
       rejoin();
     };
     const onPresence = (list: OnlinePlayer[]) => dispatch(setOnline(list));

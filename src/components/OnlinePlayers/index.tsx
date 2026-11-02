@@ -10,8 +10,10 @@ import styles from "./style.module.css";
 interface OnlinePlayersProps {
   // Lobideyken müsait oyunculara davet gönderilebilir
   canInvite: boolean;
-  // Davet butonu yerine gösterilecek açıklama (ör. "Davet etmek için bir oda kur")
+  // Listenin altındaki açıklama
   hint?: string;
+  // Davet davranışı; verilmezse oyuncu bulunduğu odaya davet edilir
+  onInvite?: (targetId: string) => Promise<unknown>;
 }
 
 const STATUS_LABELS: Record<PresenceStatus, string> = {
@@ -24,7 +26,7 @@ const STATUS_LABELS: Record<PresenceStatus, string> = {
 const INVITE_COOLDOWN_MS = 15000;
 
 // Sitede adını girmiş çevrimiçi oyuncular; müsait olanlar odaya davet edilebilir
-function OnlinePlayers({ canInvite, hint }: OnlinePlayersProps) {
+function OnlinePlayers({ canInvite, hint, onInvite = gameApi.invitePlayer }: OnlinePlayersProps) {
   const dispatch = useAppDispatch();
   const online = useAppSelector((state) => state.game.online);
   // Az önce davet edilenler (id -> zaman); buton bir süre "Davet edildi" kalır
@@ -44,9 +46,15 @@ function OnlinePlayers({ canInvite, hint }: OnlinePlayersProps) {
   const invite = async (id: string, name: string) => {
     setInvited((prev) => ({ ...prev, [id]: Date.now() }));
     try {
-      await gameApi.invitePlayer(id);
+      await onInvite(id);
       dispatch(pushNotice({ message: `${name} davet edildi`, type: "info" }));
     } catch (error) {
+      // Davet gitmediyse buton tekrar kullanılabilsin
+      setInvited((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
       dispatch(pushNotice({ message: handleApiError(error), type: "error" }));
     }
   };

@@ -437,8 +437,9 @@ io.on('connection', (socket) => {
     schedulePresence();
   };
 
-  // Yeni bağlanan herkes güncel çevrimiçi listesini hemen alır
-  socket.emit('presence:list', JSON.parse(lastPresenceJson));
+  // Güncel çevrimiçi listesi. İstemci dinlemeye başladıktan sonra ister; bağlanır bağlanmaz
+  // gönderilen bir mesaj, dinleyici henüz kurulmadıysa kaybolabilir.
+  socket.on('presence:get', (_payload, ack) => reply(ack, { ok: true, list: presenceList() }));
 
   // Tarayıcıda adı kayıtlı oyuncu bağlanınca kendini çevrimiçi listesine ekletir
   socket.on('presence:hello', ({ name, avatar } = {}, ack) => {

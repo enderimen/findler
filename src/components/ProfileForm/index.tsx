@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AvatarPicker from "@/components/AvatarPicker";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
@@ -18,19 +18,25 @@ interface ProfileFormProps {
   // inline: etiket solda, butonlar sağda (kullanıcı adı ekranı)
   // stacked: etiketsiz, ortalı alan ve tam genişlikte buton (davet kartı)
   variant?: "inline" | "stacked";
+  // Formdaki ad/avatar her değiştiğinde bildirilir (ör. listeden doğrudan davet için)
+  onChange?: (profile: Profile) => void;
 }
 
 const NAME_MIN = 2;
 const NAME_MAX = 16;
 
 // Avatar + kullanıcı adı formu. Son kullanılan profil otomatik doldurulur.
-function ProfileForm({ actions, variant = "inline" }: ProfileFormProps) {
+function ProfileForm({ actions, variant = "inline", onChange }: ProfileFormProps) {
   const stacked = variant === "stacked";
   const [name, setName] = useState(() => getProfile()?.name ?? "");
   const [avatar, setAvatar] = useState<string | null>(() => getProfile()?.avatar ?? null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const connected = useAppSelector((state) => state.game.connected);
+
+  useEffect(() => {
+    onChange?.({ name: name.trim(), avatar });
+  }, [name, avatar, onChange]);
 
   const submit = async (action: ProfileAction) => {
     const trimmed = name.trim();
