@@ -32,16 +32,6 @@
   relative;
 }
 
-.leaderName {
-  @apply
-  absolute
-  bottom-[65px]
-  left-1/2
-  text-lg
-  font-bold
-  text-white
-  -translate-x-1/2
-}
 
 .confettiWrapper {
   @apply

@@ -86,7 +86,6 @@ function GameResult({ room, meId, isHost, onPlayAgain, onBackToLobby, onRequestR
         transition={{ type: 'spring', stiffness: 160, damping: 12, delay: 0.2 }}
       >
         <img src={leader} alt="Lider" />
-        <p className={styles.leaderName}>{winner?.name}</p>
       </motion.div>
 
       {room.solo && me && room.durationMs !== null && (
