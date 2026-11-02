@@ -46,7 +46,6 @@ function ShareResult({ room, me }: ShareResultProps) {
   useEffect(() => {
     let url: string | null = null;
     createShareCard({
-      name: me.name,
       solo: room.solo,
       cardCount,
       moves: me.moves,

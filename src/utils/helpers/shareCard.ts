@@ -5,7 +5,6 @@ import { levelColor } from '@/utils/constants/gameSettings';
 // her cihazda aynı ve temiz görünen, tuvalde çizilmiş bir kart üretir.
 
 export interface ShareCardData {
-  name: string;
   solo: boolean;
   cardCount: number;
   moves: number;
@@ -88,14 +87,11 @@ export const createShareCard = async (data: ShareCardData): Promise<Blob> => {
   fitFont(ctx, title, (s) => `700 ${s}px Raleway, sans-serif`, 76, SIZE - 160);
   ctx.fillText(title, center, 275);
 
-  // Kazanan rozeti ve adı (sonuç ekranındaki gibi)
+  // Kazanan rozeti (sonuç ekranındaki gibi; paylaşan kişi belli olduğu için isim yazılmaz)
   const badgeH = 380;
   const badgeW = (leader.width / leader.height) * badgeH;
   const badgeY = 310;
   ctx.drawImage(leader, center - badgeW / 2, badgeY, badgeW, badgeH);
-  ctx.fillStyle = '#fff';
-  fitFont(ctx, data.name, (s) => `700 ${s}px Raleway, sans-serif`, 40, badgeW * 0.62);
-  ctx.fillText(data.name, center, badgeY + badgeH - (65 / 214) * badgeH);
 
   // İstatistikler
   const stats = [
