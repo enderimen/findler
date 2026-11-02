@@ -1,0 +1,92 @@
+.bar {
+  @apply
+  relative
+  flex
+  shrink-0
+  items-center
+  gap-0.5
+  rounded-full
+  border
+  border-white
+  border-opacity-20
+  bg-black
+  bg-opacity-30
+  px-1.5
+  py-1
+  backdrop-blur-sm
+  sm:gap-1;
+}
+
+.emoji {
+  @apply
+  flex
+  h-9
+  w-9
+  items-center
+  justify-center
+  rounded-full
+  text-xl
+  transition-colors
+  hover:bg-white
+  hover:bg-opacity-10
+  disabled:opacity-50
+  sm:h-10
+  sm:w-10;
+}
+
+.active {
+  @apply
+  bg-white
+  bg-opacity-20;
+}
+
+/* Hazır mesajlar çubuğun üstünde, ekranın ortasında açılır */
+.messagesAnchor {
+  @apply
+  pointer-events-none
+  absolute
+  bottom-full
+  left-1/2
+  z-20
+  mb-2
+  flex
+  w-[calc(100vw-2rem)]
+  max-w-[420px]
+  -translate-x-1/2
+  justify-center;
+}
+
+.messages {
+  @apply
+  pointer-events-auto
+  flex
+  w-max
+  max-w-full
+  flex-wrap
+  justify-center
+  gap-1.5
+  rounded-2xl
+  border
+  border-gold
+  border-opacity-40
+  bg-[var(--bg-color-dark)]
+  p-2
+  shadow-2xl;
+}
+
+.messages button {
+  @apply
+  whitespace-nowrap
+  rounded-full
+  border
+  border-gold
+  border-opacity-50
+  px-3
+  py-1.5
+  text-sm
+  text-gold
+  transition-colors
+  hover:bg-gold
+  hover:text-light-black
+  disabled:opacity-50;
+}

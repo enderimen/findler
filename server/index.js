@@ -31,6 +31,15 @@ const OPTIONS = {
 // Varsayılan seviye 5: masa varsayılan yeşille açılır, renk ancak kurucu seviyeyi yükseltince değişir
 const DEFAULT_SETTINGS = { mode: 'classic', symbols: 'numbers', cardCount: 5, turnSeconds: 30 };
 
+// Oyun sırasında gönderilebilen hazır tepkiler (emoji ve mesajlar). Sadece bu anahtarlar
+// kabul edilir; serbest metin yoktur. İstemcideki karşılıkları: src/utils/constants/reactions.ts
+const REACTION_KINDS = new Set([
+  'heart', 'clap', 'genius', 'party', 'fire', 'wow',
+  'super', 'smart', 'memory', 'awesome', 'close', 'respect'
+]);
+const REACTION_WINDOW_MS = 5000;
+const REACTION_LIMIT = 5; // Oyuncu başına pencere içinde en fazla tepki
+
 const SYMBOL_NAMES = { numbers: 'sayı', odd: 'tek sayı', even: 'çift sayı', letters: 'harf' };
 
 // Kurucu bir ayarı değiştirince diğer oyunculara gösterilecek açıklama
@@ -555,6 +564,24 @@ io.on('connection', (socket) => {
     reply(ack, { ok: true });
     if (!room.solo) notify(room, 'Oyun başladı!', 'start');
     broadcast(room);
+  });
+
+  // Odadaki oyunculara kısa ömürlü bir tepki (emoji / hazır mesaj) gönderir
+  socket.on('room:reaction', ({ kind } = {}, ack) => {
+    const room = currentRoom();
+    if (!room || room.solo) return fail(ack, 'Tepki gönderilemez.');
+    if (!REACTION_KINDS.has(kind)) return fail(ack, 'Geçersiz tepki.');
+    const player = findPlayer(room, socket.data.playerId);
+    if (!player) return fail(ack, 'Odada değilsin.');
+
+    // Taşkınlığı önle
+    const now = Date.now();
+    player.reactionTimes = (player.reactionTimes || []).filter((t) => now - t < REACTION_WINDOW_MS);
+    if (player.reactionTimes.length >= REACTION_LIMIT) return fail(ack, 'Biraz yavaş!');
+    player.reactionTimes.push(now);
+
+    reply(ack, { ok: true });
+    io.to(room.id).emit('room:reaction', { id: `${player.id}-${now}`, playerId: player.id, name: player.name, kind });
   });
 
   // Oyun bitince kurucu olmayan oyuncu tekrar oynamak istediğini bildirir;

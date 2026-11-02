@@ -79,3 +79,11 @@ export interface RoomScores {
   meId: string | null;
   players: Pick<Player, 'id' | 'name' | 'avatar' | 'wins' | 'games'>[];
 }
+
+// Oyun sırasında odadakilere gönderilen kısa ömürlü tepki (emoji / hazır mesaj)
+export interface Reaction {
+  id: string;
+  playerId: string;
+  name: string;
+  kind: string;
+}

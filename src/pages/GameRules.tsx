@@ -50,6 +50,7 @@ const GameRules = () => {
             <li>Oyun sıra tabanlıdır, yani her oyuncu kendi sırası geldiğinde kart açabilir.</li>
             <li>Yanlış açılan kartlar hemen kapanır ve sıra diğer oyuncuya geçer.</li>
             <li>Hamle süresini oda kurucusu belirler (10, 20, 30, 60 saniye veya süresiz). Süre dolarsa açık kartlar kapanır ve sıra diğer oyuncuya geçer.</li>
+            <li>Çok oyunculu oyunlarda tahtanın altındaki çubuktan rakiplerine emoji ya da "Süpersin!" gibi hazır mesajlar gönderebilirsin.</li>
           </ul>
         </li>
 

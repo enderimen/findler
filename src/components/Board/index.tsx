@@ -1,6 +1,7 @@
 import { CSSProperties, RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import Card from "@/components/Card";
+import ReactionBar from "@/components/ReactionBar";
 import { gameApi } from "@/services/socket/game";
 import { useAppDispatch } from "@/store/hooks";
 import { pushNotice } from "@/store/slices/game";
@@ -191,6 +192,8 @@ function Board({ room, meId }: BoardProps) {
           ))}
         </div>
       </div>
+      {/* Çok oyunculu oyunda oyuncular birbirine tepki gönderebilir */}
+      {!room.solo && <ReactionBar />}
     </div>
   );
 }

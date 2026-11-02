@@ -55,5 +55,6 @@ export const gameApi = {
   startGame: () => request('game:start'),
   restartGame: () => request('game:restart'),
   requestRematch: () => request('game:rematch'),
+  sendReaction: (kind: string) => request('room:reaction', { kind }),
   flipCard: (index: number) => request<{ value: number }>('card:flip', { index })
 };

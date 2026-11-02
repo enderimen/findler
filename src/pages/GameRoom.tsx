@@ -7,6 +7,7 @@ import GameSettingsPanel from '@/components/GameSettingsPanel';
 import PlayerList from '@/components/PlayerList';
 import InviteJoin from '@/components/InviteJoin';
 import Watermark from '@/components/Watermark';
+import ReactionLayer from '@/components/ReactionLayer';
 import GameResult from '@/pages/GameResult';
 import { useRoom } from '@/hooks/useRoom';
 import { useLeaveRoom } from '@/hooks/useLeaveRoom';
@@ -163,6 +164,8 @@ function GameRoom() {
     <>
       <Watermark faded />
       <RoomContent />
+      {/* Oyunculardan gelen tepkiler ekranın alt ortasından yükselir */}
+      {room && room.roomId === roomId && !room.solo && <ReactionLayer />}
     </>
   );
 }
