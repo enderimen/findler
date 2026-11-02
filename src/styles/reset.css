@@ -8,4 +8,12 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  /* Sayfa gövdesi hiç kaymaz; kaydırma sadece içerik alanında (main) olur. Mobilde adres
+     çubuğu açılıp kapanınca ekran yüksekliği değişse de altta boş, kayan bir alan oluşmaz. */
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#root {
+  height: 100%;
 }

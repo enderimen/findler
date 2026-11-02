@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { gameApi } from "@/services/socket/game";
+import { useAppDispatch } from "@/store/hooks";
+import { pushNotice } from "@/store/slices/game";
+import { Error as ErrorMessage } from "@/utils/constants";
 import { EMOJI_REACTIONS, MESSAGE_REACTIONS } from "@/utils/constants/reactions";
 import styles from "./style.module.css";
 
@@ -9,6 +12,7 @@ const COOLDOWN_MS = 600;
 
 // Oyun tahtasının altındaki tepki çubuğu: emojiler ve hazır mesajlar
 function ReactionBar() {
+  const dispatch = useAppDispatch();
   const [messagesOpen, setMessagesOpen] = useState(false);
   const [cooling, setCooling] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -31,8 +35,12 @@ function ReactionBar() {
     setMessagesOpen(false);
     setCooling(true);
     timer.current = setTimeout(() => setCooling(false), COOLDOWN_MS);
-    // Sınır aşılırsa sunucu reddeder; oyuncuyu hata mesajıyla rahatsız etmeye gerek yok
-    gameApi.sendReaction(kind).catch(() => {});
+    gameApi.sendReaction(kind).catch((error: Error) => {
+      // Hızlı basma sınırına takılmak sessiz kalır; sunucuya hiç ulaşılamadıysa haber ver
+      if (error.message === ErrorMessage.network) {
+        dispatch(pushNotice({ message: "Tepki gönderilemedi", type: "error" }));
+      }
+    });
   };
 
   return (

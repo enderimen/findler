@@ -174,6 +174,8 @@ function GameResult({ room, meId, isHost, onPlayAgain, onBackToLobby, onRequestR
       </div>
       <Confetti
         className={styles.confettiWrapper}
+        // Sayfa akışında durursa mobilde ekran yüksekliği değişince taşma yaratabilir; ekrana sabitlenir
+        style={{ position: 'fixed', inset: 0 }}
         width={width}
         height={height}
         gravity={0.2}
