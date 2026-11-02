@@ -8,6 +8,7 @@ import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import GameSettingsPanel from '@/components/GameSettingsPanel';
 import SettingsSummary from '@/components/SettingsSummary';
+import ShareResult from '@/components/ShareResult';
 import { RoomState } from '@/types/game';
 import { formatDuration, playSound } from '@/utils/helpers';
 
@@ -141,6 +142,13 @@ function GameResult({ room, meId, isHost, onPlayAgain, onBackToLobby, onRequestR
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Kazanan (tek kişilikte bitiren) sonucunu sosyal medyada paylaşabilir */}
+      {(isWinner || room.solo) && me && (
+        <div className={styles.share}>
+          <ShareResult room={room} me={me} />
+        </div>
+      )}
 
       <div ref={actionsRef} className={styles.actions}>
         {isHost ? (

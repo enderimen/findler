@@ -175,3 +175,10 @@
   overflow-hidden
   px-4
 }
+
+.share {
+  @apply
+  mt-5
+  flex
+  justify-center
+}
