@@ -26,6 +26,11 @@ const DynamicInput = ({ type = "text", label, placeholder, value, maxLength, aut
         value={value}
         maxLength={maxLength}
         autoFocus={autoFocus}
+        // Kullanıcı adı: telefon klavyesi kelimeyi düzeltip/tamamlayıp değiştirmesin
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="words"
+        spellCheck={false}
         onChange={(e) => onChange(e.target.value)}
         className={styles.input}
       />
